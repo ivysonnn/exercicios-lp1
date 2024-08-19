@@ -5,67 +5,117 @@ using namespace std;
 
 const double PI = 3.14;
 
-class Area {
-    public:        
-        // Cubo
-        double area(double edge) {
-            return 6 * pow(edge, 2);
-        } 
+class FiguraEspacial{
+    protected: 
+        double length;
+        double width;
+        double height;
 
-        // Esfera
-        double area(int radius) {
-            return 4 * PI * pow(radius, 2);
-        }
+        bool checkValue(double value) {
+            return value > 0;
+        } ;
+    public:
+        FiguraEspacial(double l = 0, double w = 0, double h = 0) : length(l), width(w), height(h) {} 
+        virtual double area() const = 0;
+        virtual double volume() const = 0;
+        virtual ~FiguraEspacial() = default;
 
-        // Pirâmide
-        double area(double baseArea, double sideArea) {
-            return  baseArea + sideArea;
-        }
-
-        // Paralelepípedo
-        double area(double edge1, double edge2, double edge3) {
-            double a1 = 2 * edge1 * edge2;
-            double a2 = 2 * edge1 * edge3;
-            double a3 = 2 * edge2 * edge3;
-
-            return a1 + a2 + a3;
-        } 
 };
 
-class Volume {
-    public:        
-        // Cubo
-        double volume(double edge) {
-            return pow(edge, 3);
-        } 
+class Piramide : public FiguraEspacial {
+    public:
+       Piramide(double l, double w, double h) : FiguraEspacial(l, w, h) {}
+        double area() const override {
+            // Área da base (quadrada)
+            double areaBase = length * width;
+            // Altura inclinada da pirâmide
+            double alturaInclinada = sqrt(pow(height, 2) + pow(length / 2, 2));
+            // Área lateral da pirâmide (quatro triângulos)
+            double areaLateral = 2 * length * alturaInclinada + 2 * width * alturaInclinada;
 
-        // Esfera
-        double volume(int radius) {
-            return (4.0 / 3.0) * PI * pow(radius, 3);
+            return areaBase + areaLateral;
         }
 
-        // Pirâmide
-        double volume(double baseArea, double sideArea) {
-            return (1.0 / 3.0) * baseArea * sideArea;
+       double volume() const override {
+        return (1.0/3.0) * length * width * height;
+       }
+};
+
+class Cubo : public FiguraEspacial {
+    public:
+        Cubo(double edges) : FiguraEspacial(edges, edges, edges) {
+            if(!checkValue(edges)) {
+                throw invalid_argument("O valor deve ser maior que zero.");
+            }
         }
 
-        // Paralelepípedo
-        double volume(double edge1, double edge2, double edge3) {
-            return edge1 * edge2 * edge3;
-        } 
+        double area() const override {
+            return 6 * pow(length, 2);
+        }
+
+        double volume() const override {
+            return pow(length, 3);
+        }
+};
+
+class Paralelepipedo : public FiguraEspacial {
+    public:
+        Paralelepipedo(double l, double w, double h) : FiguraEspacial(l, w, h) {
+            if(!checkValue(l) || !checkValue(w) || !checkValue(h)) {
+                throw invalid_argument("Os valores devem ser maiores que zero.");
+            }
+        }
+
+        double area() const override {
+            return (2 * length * width) + (2 * length * height) + (2 * width * height);
+        }
+
+        double volume() const override {
+            return length * width * height;
+        }
+};
+
+class Esfera : public FiguraEspacial {
+    public: 
+        Esfera(double r) : FiguraEspacial(r, 0, 0) {
+            if(!checkValue(r)) {
+                throw invalid_argument("Os valores devem ser maiores que zero.");
+            }
+        }
+
+        double area() const override {
+            return 4 * PI * pow(length, 2);
+        }
+
+        double volume() const override {
+            return (4/3) * PI * pow(length, 3);
+        }
 };
 
 int main() {
-    Volume *volume = new Volume();
-    Area *area = new Area();
+    try {
+        FiguraEspacial* cubo = new Cubo(8.2);
+        cout << "Volume Cubo..........: " << cubo->volume() << endl;
+        FiguraEspacial* esfera = new Esfera(5);
+        cout << "Volume Esfera........: " << esfera->volume() << endl;
+        FiguraEspacial* piramide = new Piramide(3, 5, 7);
+        cout << "Volume Pirâmide......: " << piramide->volume() << endl;
+        FiguraEspacial* paralelepipedo = new Paralelepipedo(2, 4, 6);
+        cout << "Volume Paralelepipedo: " << paralelepipedo->volume() << endl;
+        cout << endl;
 
-    cout << "Volume Cubo..........: " << volume->volume(3.5) << endl; 
-    cout << "Volume Esfera........: " << volume->volume(5) << endl;
-    cout << "Volume Pirâmide......: " << volume->volume(3.0, 5.0) << endl;
-    cout << "Volume Paralelepípedo: " << volume->volume(2.0, 4.0, 6.0) << endl;
-    cout << endl;
-    cout << "Area Cubo..........: " << area->area(8.2) << endl; 
-    cout << "Area Esfera........: " << area->area(15) << endl;
-    cout << "Area Pirâmide......: " << area->area(4, 8.0) << endl;
-    cout << "Area Paralelepípedo: " << area->area(5.0, 6.0, 7.0) << endl;
+        cout << "Area Cubo..........: " << cubo->area() << endl; 
+        cout << "Area Esfera........: " << esfera->area() << endl;
+        cout << "Area Pirâmide......: " << piramide->area() << endl;
+        cout << "Area Paralelepípedo: " << paralelepipedo->area() << endl;
+
+        delete cubo;
+        delete esfera;
+        delete piramide;
+        delete paralelepipedo;
+    } catch (const std::invalid_argument& e) {
+        std::cerr << "Erro: " << e.what() << std::endl;
+    }
+
+    return 0;
 }
