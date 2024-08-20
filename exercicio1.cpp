@@ -107,6 +107,7 @@ class Menu {
             cout << "4) Paralelepipedo" << endl;
             cout << "Digite a opção desejada: ";
             cin >> option;
+
             return option;
         }
 
@@ -152,6 +153,7 @@ class Menu {
 };
 
 int main() {
+
     Menu *menu = new Menu;
     FiguraEspacial* figura;
     
@@ -160,29 +162,33 @@ int main() {
     FiguraEspacial::Volume volumePtr = &FiguraEspacial::volume;
 
     try {
-        switch(menu->figureOption()) {
-            case 1: 
-                figura = menu->cubo();
-                cout << "Volume Cubo..........: " << (figura->*volumePtr)() << endl;
-                cout << "Area Cubo............: " << (figura->*areaPtr)() << endl; 
-                break;
-            case 2: 
-                figura = menu->esfera();
-                cout << "Volume Esfera........: " << (figura->*volumePtr)() << endl;
-                cout << "Area Esfera..........: " << (figura->*areaPtr)() << endl; 
-                break;
-            case 3: 
-                figura = menu->piramide();
-                cout << "Volume Piramide......: " << (figura->*volumePtr)() << endl;
-                cout << "Area Piramide........: " << (figura->*areaPtr)() << endl; 
-                break;
-            case 4: 
-                figura = menu->paralelepipedo();
-                cout << "Volume Paralelepipedo: " << (figura->*volumePtr)() << endl;
-                cout << "Area Paralelepipedo..: " << (figura->*areaPtr)() << endl; 
-                break;
-            default: break;
-        }
+        int opt;
+        do {
+            opt = menu->figureOption();
+            switch(opt) {
+                case 1: 
+                    figura = menu->cubo();
+                    cout << "Volume Cubo..........: " << (figura->*volumePtr)() << endl;
+                    cout << "Area Cubo............: " << (figura->*areaPtr)() << endl; 
+                    break;
+                case 2: 
+                    figura = menu->esfera();
+                    cout << "Volume Esfera........: " << (figura->*volumePtr)() << endl;
+                    cout << "Area Esfera..........: " << (figura->*areaPtr)() << endl; 
+                    break;
+                case 3: 
+                    figura = menu->piramide();
+                    cout << "Volume Piramide......: " << (figura->*volumePtr)() << endl;
+                    cout << "Area Piramide........: " << (figura->*areaPtr)() << endl; 
+                    break;
+                case 4: 
+                    figura = menu->paralelepipedo();
+                    cout << "Volume Paralelepipedo: " << (figura->*volumePtr)() << endl;
+                    cout << "Area Paralelepipedo..: " << (figura->*areaPtr)() << endl; 
+                    break;
+                default: break;
+            }
+        } while(opt != 0);
     } catch (invalid_argument& e) {
         cerr << "Erro: " << e.what() << endl;
     }
