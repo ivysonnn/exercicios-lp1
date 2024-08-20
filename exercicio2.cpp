@@ -71,7 +71,8 @@ public:
         int jumpDistance = distr(gen);
         distanceTraveled += jumpDistance;
 
-        std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")" << std::string(TOTAL_RACE_DISTANCE-(distanceTraveled+name.size()-15), ' ');
+        // std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")" << std::string(TOTAL_RACE_DISTANCE-(distanceTraveled+name.size()-15), ' ');
+        std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")";
         if(!color){
             std::cout << "⬜" << std::endl;
         } else { 
@@ -116,17 +117,9 @@ void clear_terminal() {
     #endif
 }
 
-void addFrogsInRace(vector<Frog*>& frogsInRace) {
+void addFrogsInRace(int quantityFrogs, vector<Frog*>& frogsInRace) {
     string name;
     double maxJumpDistance;
-    int quantityFrogs;
-
-    cout << "Quantidade de sapos: ";
-    while (!(cin >> quantityFrogs) || quantityFrogs <= 0) {
-        cin.clear();
-        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
-        cout << "Quantidade inválida inválida! Informe um valor positivo: ";
-    }
 
     for (int i=1; i < quantityFrogs+1; i++) {  
         cout << "Cadastrando sapo #" << setw(2) << setfill('0') << i << endl;;
@@ -134,15 +127,37 @@ void addFrogsInRace(vector<Frog*>& frogsInRace) {
         cin >> name;
         cout << "Distância máxima de pulo: ";
         while (!(cin >> maxJumpDistance) || maxJumpDistance <= 0) {
-            cin.clear(); // Limpa o estado de erro
-            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora o input anterior
+            cin.clear(); 
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
             cout << "Quantidade inválida! Informe um número inteiro positivo: ";
         }
         frogsInRace.push_back(new Frog(i, name, maxJumpDistance));
     }
 }
 
-double Frog::totalRaceDistance = TOTAL_RACE_DISTANCE;
+void setupRace(vector<Frog*>& frogsInRace) {
+    double totalRaceDistance;
+    int quantityFrogsInRace;
+
+    cout << "Informe a distância total da corrida: ";
+    while (!(cin >> totalRaceDistance) || totalRaceDistance <= 0) {
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cout << "Distância inválida! Informe um valor positivo: ";
+    }
+    Frog::totalRaceDistance = totalRaceDistance;
+
+    cout << "Informe a quantidade de sapos na corrida: ";
+    while (!(cin >> quantityFrogsInRace) || quantityFrogsInRace <= 0) {
+        cin.clear(); 
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cout << "Quantidade inválida! Informe um número inteiro positivo: ";
+    }
+
+    addFrogsInRace(quantityFrogsInRace, frogsInRace);
+}
+
+double Frog::totalRaceDistance = 0.0;
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
@@ -150,7 +165,7 @@ int main() {
     vector<Frog*> frogsInRace;
     int round = 1;
 
-    addFrogsInRace(frogsInRace);
+    setupRace(frogsInRace);
 
     std::cout << "Largada: " << std::endl;
     for (Frog* f : frogsInRace) {
