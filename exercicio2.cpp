@@ -6,8 +6,13 @@
 #include <iomanip>
 #include <random>
 #include <algorithm> 
+#include <thread>
+#include <chrono>
+
+#define TOTAL_RACE_DISTANCE 100 
 
 using namespace std;
+bool color = false;
 
 class Frog {
 private:
@@ -62,7 +67,14 @@ public:
 
         int jumpDistance = distr(gen);
         distanceTraveled += jumpDistance;
-        
+
+        std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")" << std::string(TOTAL_RACE_DISTANCE-(distanceTraveled+name.size()-15), ' ');
+        if(!color){
+            std::cout << "⬜" << std::endl;
+        } else { 
+            std::cout << "⬛" << std::endl;
+        }
+        color = !color;
         numberOfJumps++;
     }
 };
@@ -73,25 +85,42 @@ void printCentered(string text, int width) {
     cout << setw(padLeft + text.length()) << setfill(' ') << right << text;
     cout << setw(padRight) << setfill(' ') << " ";
 }
+void clear_terminal() {
+    #if defined(_WIN32) || defined(_WIN64)
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif
+}
 
-double Frog::totalRaceDistance = 250;
+double Frog::totalRaceDistance = TOTAL_RACE_DISTANCE;
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
     vector<Frog*> positions;
     vector<Frog*> frogsInRace = {
-        new Frog(1 , 0, 0, 2, 1, 0, 0, "Roberto"  , 0, 25),
-        new Frog(2 , 0, 0, 0, 0, 0, 0, "Cleiton"  , 0, 25),
-        new Frog(3 , 0, 0, 1, 0, 0, 0, "Cavalo"   , 0, 25),
-        new Frog(4 , 0, 0, 2, 0, 1, 0, "Irineu"   , 0, 25),
-        new Frog(5 , 0, 0, 7, 3, 4, 0, "Chaves"   , 0, 25),
-        new Frog(6 , 0, 0, 3, 2, 0, 0, "Girafales", 0, 25),
-        new Frog(7 , 0, 0, 9, 6, 1, 0, "Clotilde" , 0, 25),
-        new Frog(8 , 0, 0, 5, 3, 2, 0, "Bruxa 71" , 0, 25),
-        new Frog(9 , 0, 0, 8, 6, 0, 0, "Kiko"     , 0, 25),
-        new Frog(10, 0, 0, 3, 1, 2, 0, "NhoNho"   , 0, 25)
+        new Frog(1 , 0, 0, 2, 1, 0, 0, "Roger"  , 0, 10),
+        new Frog(2 , 0, 0, 0, 0, 0, 0, "Cleiton"  , 0, 10),
+        new Frog(3 , 0, 0, 1, 0, 0, 0, "Robisvaldo"   , 0, 10),
+        new Frog(4 , 0, 0, 2, 0, 1, 0, "Irineu"   , 0, 10),
+        new Frog(5 , 0, 0, 7, 3, 4, 0, "Chaves"   , 0, 10),
+        new Frog(6 , 0, 0, 3, 2, 0, 0, "Girafales", 0, 10),
+        new Frog(7 , 0, 0, 9, 6, 1, 0, "Clotilde" , 0, 10),
+        new Frog(8 , 0, 0, 5, 3, 2, 0, "Alaide" , 0, 10),
+        new Frog(9 , 0, 0, 8, 6, 0, 0, "Kiko"     , 0, 10),
+        new Frog(10, 0, 0, 3, 1, 2, 0, "NhoNho"   , 0, 10)
     };
+    int round = 1;
 
+    std::cout << "Largada: " << std::endl;
+    for (Frog* f : frogsInRace) {
+        std::cout << "🐸" << "(Sapo " << f->getName() << ")" << std::endl;
+    }
+    std::cout << "Preparar...." << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(2));
+    std::cout << "PULAR!!! 💥 💥" << std::endl;
+    std::this_thread::sleep_for(std::chrono::seconds(1));
+    clear_terminal();
     while (positions.size() < frogsInRace.size()) {
         for (Frog* f : frogsInRace) {
             auto it = std::find(positions.begin(), positions.end(), f);
@@ -107,6 +136,8 @@ int main() {
                 }
             }
         }
+        std::this_thread::sleep_for(std::chrono::milliseconds(800));
+        clear_terminal();
     }   
 
     cout << "Pos |";
