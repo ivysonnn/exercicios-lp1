@@ -32,6 +32,9 @@ public:
 
     Frog() : id(0), numberOfJumps(0), totalNumberOfJumps(0), numberOfTestsPlayed(0), wins(0), draws(0), quantity(0), name(""), distanceTraveled(0.0), maxJumpDistance(5.0) {}
 
+    Frog(int id, string name, double maxJumpDistance)
+        : id(id), numberOfJumps(0), totalNumberOfJumps(0), numberOfTestsPlayed(0), wins(0), draws(0), quantity(0), name(name), distanceTraveled(0.0), maxJumpDistance(maxJumpDistance) {}
+
     // Construtor parametrizado
     Frog(int id, int numberOfJumps, int totalNumberOfJumps, int numberOfTestsPlayed, int wins, int draws, int quantity, string name, double distanceTraveled, double maxJumpDistance)
         : id(id), numberOfJumps(numberOfJumps), totalNumberOfJumps(totalNumberOfJumps), numberOfTestsPlayed(numberOfTestsPlayed), wins(wins), draws(draws), quantity(quantity), name(name), distanceTraveled(distanceTraveled), maxJumpDistance(maxJumpDistance) {}
@@ -113,24 +116,41 @@ void clear_terminal() {
     #endif
 }
 
+void addFrogsInRace(vector<Frog*>& frogsInRace) {
+    string name;
+    double maxJumpDistance;
+    int quantityFrogs;
+
+    cout << "Quantidade de sapos: ";
+    while (!(cin >> quantityFrogs) || quantityFrogs <= 0) {
+        cin.clear();
+        cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+        cout << "Quantidade inválida inválida! Informe um valor positivo: ";
+    }
+
+    for (int i=1; i < quantityFrogs+1; i++) {  
+        cout << "Cadastrando sapo #" << setw(2) << setfill('0') << i << endl;;
+        cout << "Nome: ";
+        cin >> name;
+        cout << "Distância máxima de pulo: ";
+        while (!(cin >> maxJumpDistance) || maxJumpDistance <= 0) {
+            cin.clear(); // Limpa o estado de erro
+            cin.ignore(numeric_limits<streamsize>::max(), '\n'); // Ignora o input anterior
+            cout << "Quantidade inválida! Informe um número inteiro positivo: ";
+        }
+        frogsInRace.push_back(new Frog(i, name, maxJumpDistance));
+    }
+}
+
 double Frog::totalRaceDistance = TOTAL_RACE_DISTANCE;
 
 int main() {
     srand(static_cast<unsigned int>(time(0)));
     vector<Frog*> positions;
-    vector<Frog*> frogsInRace = {
-        new Frog(1 , 0, 0, 2, 1, 0, 0, "Roger"  , 0, 10),
-        new Frog(2 , 0, 0, 0, 0, 0, 0, "Cleiton"  , 0, 10),
-        new Frog(3 , 0, 0, 1, 0, 0, 0, "Robisvaldo"   , 0, 10),
-        new Frog(4 , 0, 0, 2, 0, 1, 0, "Irineu"   , 0, 10),
-        new Frog(5 , 0, 0, 7, 3, 4, 0, "Chaves"   , 0, 10),
-        new Frog(6 , 0, 0, 3, 2, 0, 0, "Girafales", 0, 10),
-        new Frog(7 , 0, 0, 9, 6, 1, 0, "Clotilde" , 0, 10),
-        new Frog(8 , 0, 0, 5, 3, 2, 0, "Alaide" , 0, 10),
-        new Frog(9 , 0, 0, 8, 6, 0, 0, "Kiko"     , 0, 10),
-        new Frog(10, 0, 0, 3, 1, 2, 0, "NhoNho"   , 0, 10)
-    };
+    vector<Frog*> frogsInRace;
     int round = 1;
+
+    addFrogsInRace(frogsInRace);
 
     std::cout << "Largada: " << std::endl;
     for (Frog* f : frogsInRace) {
