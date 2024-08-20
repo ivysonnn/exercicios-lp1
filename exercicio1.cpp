@@ -20,6 +20,10 @@ class FiguraEspacial{
         virtual double volume() const = 0;
         virtual ~FiguraEspacial() = default;
 
+        //Definição das funções ponteiros
+        typedef double (FiguraEspacial::*Area)() const;
+        typedef double (FiguraEspacial::*Volume)() const;
+ 
 };
 
 class Piramide : public FiguraEspacial {
@@ -44,8 +48,8 @@ class Piramide : public FiguraEspacial {
 class Cubo : public FiguraEspacial {
     public:
         Cubo(double edges) : FiguraEspacial(edges, edges, edges) {
-            if(!checkValue(edges)) {
-                throw invalid_argument("O valor deve ser maior que zero.");
+            if(!checkValue(edges)) { //checa se a aresta do cubo é maior que zero
+                throw invalid_argument("O valor da aresta deve ser maior que zero.");
             }
         }
 
@@ -61,7 +65,7 @@ class Cubo : public FiguraEspacial {
 class Paralelepipedo : public FiguraEspacial {
     public:
         Paralelepipedo(double l, double w, double h) : FiguraEspacial(l, w, h) {
-            if(!checkValue(l) || !checkValue(w) || !checkValue(h)) {
+            if(!checkValue(l) || !checkValue(w) || !checkValue(h)) { // checa se os parametros passados são maiores que zero
                 throw invalid_argument("Os valores devem ser maiores que zero.");
             }
         }
@@ -78,8 +82,8 @@ class Paralelepipedo : public FiguraEspacial {
 class Esfera : public FiguraEspacial {
     public: 
         Esfera(double r) : FiguraEspacial(r, 0, 0) {
-            if(!checkValue(r)) {
-                throw invalid_argument("Os valores devem ser maiores que zero.");
+            if(!checkValue(r)) { //checa se o raio fornecido é maior que zero
+                throw invalid_argument("O raio da esfera deve ser maior que zero.");
             }
         }
 
@@ -88,33 +92,40 @@ class Esfera : public FiguraEspacial {
         }
 
         double volume() const override {
-            return (4/3) * PI * pow(length, 3);
+            return (4.0/3.0) * PI * pow(length, 3);
         }
 };
 
 int main() {
     try {
+        //Criação das figuras
         FiguraEspacial* cubo = new Cubo(8.2);
-        cout << "Volume Cubo..........: " << cubo->volume() << endl;
         FiguraEspacial* esfera = new Esfera(5);
-        cout << "Volume Esfera........: " << esfera->volume() << endl;
         FiguraEspacial* piramide = new Piramide(3, 5, 7);
-        cout << "Volume Pirâmide......: " << piramide->volume() << endl;
         FiguraEspacial* paralelepipedo = new Paralelepipedo(2, 4, 6);
-        cout << "Volume Paralelepipedo: " << paralelepipedo->volume() << endl;
+
+        //Criação das funções ponteiros
+        FiguraEspacial::Area areaPtr = &FiguraEspacial::area;
+        FiguraEspacial::Volume volumePtr = &FiguraEspacial::volume;
+
+        cout << "Volume Cubo..........: " << (cubo->*volumePtr)() << endl;
+        cout << "Volume Esfera........: " << (esfera->*volumePtr)() << endl;
+        cout << "Volume Pirâmide......: " << (piramide->*volumePtr)() << endl;
+        cout << "Volume Paralelepipedo: " << (paralelepipedo->*volumePtr)() << endl;
         cout << endl;
 
-        cout << "Area Cubo..........: " << cubo->area() << endl; 
-        cout << "Area Esfera........: " << esfera->area() << endl;
-        cout << "Area Pirâmide......: " << piramide->area() << endl;
-        cout << "Area Paralelepípedo: " << paralelepipedo->area() << endl;
+        cout << "Area Cubo..........: " << (cubo->*areaPtr)() << endl; 
+        cout << "Area Esfera........: " << (esfera->*areaPtr)() << endl;
+        cout << "Area Pirâmide......: " << (piramide->*areaPtr)() << endl;
+        cout << "Area Paralelepípedo: " << (paralelepipedo->*areaPtr)() << endl;
 
+        //Liberação de memória das figuras
         delete cubo;
         delete esfera;
         delete piramide;
         delete paralelepipedo;
-    } catch (const std::invalid_argument& e) {
-        std::cerr << "Erro: " << e.what() << std::endl;
+    } catch (const invalid_argument& e) {
+        cerr << "Erro: " << e.what() << endl;
     }
 
     return 0;
