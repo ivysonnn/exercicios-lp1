@@ -64,23 +64,31 @@ public:
     static void setTotalRaceDistance(double distance) { totalRaceDistance = distance; }
 
     void jump() {
-        random_device rd;  
-        mt19937 gen(rd()); 
-        std::uniform_int_distribution<> distr(1, maxJumpDistance);
+        random_device rd;
+        mt19937 gen(rd());
+        uniform_int_distribution<> distr(1, static_cast<int>(maxJumpDistance));
 
         int jumpDistance = distr(gen);
         distanceTraveled += jumpDistance;
 
-        // std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")" << std::string(TOTAL_RACE_DISTANCE-(distanceTraveled+name.size()-15), ' ');
-        std::cout << "" << std::string(distanceTraveled, '_') << "🐸(Sapo " << name << ")";
-        if(!color){
+        // Verifique se distanceTraveled é menor que TOTAL_RACE_DISTANCE
+        int raceWidth = static_cast<int>(Frog::totalRaceDistance);
+        int displayWidth = max(0, raceWidth - static_cast<int>(distanceTraveled + name.size() - 15));
+        
+        // Evite criar strings com comprimentos negativos
+        std::cout << std::string(static_cast<int>(distanceTraveled), '_')
+                << "🐸(Sapo " << name << ")"
+                << std::string(displayWidth, ' ');
+        
+        if (!color) {
             std::cout << "⬜" << std::endl;
-        } else { 
+        } else {
             std::cout << "⬛" << std::endl;
         }
         color = !color;
         numberOfJumps++;
     }
+
 };
 
 void printCentered(string text, int width) {
