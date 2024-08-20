@@ -163,7 +163,6 @@ int main() {
     srand(static_cast<unsigned int>(time(0)));
     vector<Frog*> positions;
     vector<Frog*> frogsInRace;
-    int round = 1;
 
     setupRace(frogsInRace);
 
