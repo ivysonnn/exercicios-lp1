@@ -85,6 +85,26 @@ void printCentered(string text, int width) {
     cout << setw(padLeft + text.length()) << setfill(' ') << right << text;
     cout << setw(padRight) << setfill(' ') << " ";
 }
+
+void printResult(vector<Frog*> *positions) {
+    cout << "Pos |";
+    printCentered("Nome", 25); 
+    cout << "|";
+    printCentered("Total de Pulos", 25);  
+    cout << endl;
+
+    cout << "--------------------------------------------------" << endl;
+
+    for (int i = 0; i < (*positions).size(); i++) {
+        cout << setw(2) << setfill('0') << i + 1 << "° |";
+        string name = "🐸(Sapo " + (*positions)[i]->getName() + ")";
+        printCentered(name, 27);
+        cout << "|";
+        printCentered(to_string((*positions)[i]->getNumberOfJumps()), 25);
+        cout << endl;
+    }
+}
+
 void clear_terminal() {
     #if defined(_WIN32) || defined(_WIN64)
         std::system("cls");
@@ -140,21 +160,7 @@ int main() {
         clear_terminal();
     }   
 
-    cout << "Pos |";
-    printCentered("Nome", 25); 
-    cout << "|";
-    printCentered("Total de Pulos", 25);  
-    cout << endl;
-
-    cout << "---------------------------------------------------" << endl;
-
-    for (int i = 0; i < positions.size(); i++) {
-        cout << setw(2) << setfill('0') << i + 1 << "° |";
-        printCentered(positions[i]->getName(), 25);
-        cout << "|";
-        printCentered(to_string(positions[i]->getNumberOfJumps()), 25);
-        cout << endl;
-    }
+    printResult(&positions);
     
 
     return 0;
