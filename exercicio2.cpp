@@ -183,6 +183,7 @@ int main() {
     std::cout << "PULAR!!! 💥 💥" << std::endl;
     std::this_thread::sleep_for(std::chrono::seconds(1));
     clear_terminal();
+
     while (positions.size() < frogsInRace.size()) {
         for (Frog* f : frogsInRace) {
             auto it = std::find(positions.begin(), positions.end(), f);
@@ -204,6 +205,9 @@ int main() {
 
     printResult(&positions);
     
+    for (Frog* f: positions) {
+        delete f;
+    }
 
     return 0;
 }
