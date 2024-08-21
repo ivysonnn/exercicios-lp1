@@ -5,6 +5,14 @@ using namespace std;
 
 const double PI = 3.14;
 
+void clear_terminal() {
+    #if defined(_WIN32) || defined(_WIN64)
+        std::system("cls");
+    #else
+        std::system("clear");
+    #endif
+}
+
 class FiguraEspacial{
     protected: 
         double length;
@@ -155,7 +163,7 @@ class Menu {
 };
 
 int main() {
-
+    clear_terminal();
     Menu *menu = new Menu;
     FiguraEspacial* figura;
     
@@ -191,7 +199,15 @@ int main() {
                 default: break;
             }
 
-        } while(opt != 0);
+            if (opt != 0) {
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n'); 
+                cout << "Aperta qualquer tecla para continuar";
+                getchar();
+            }
+
+            clear_terminal();
+        } while(opt != 0);  
     } catch (invalid_argument& e) {
         cerr << "Erro: " << e.what() << endl;
     }
