@@ -165,7 +165,7 @@ class Menu {
 int main() {
     clear_terminal();
     Menu *menu = new Menu;
-    FiguraEspacial* figura;
+    FiguraEspacial* figura = nullptr;
     
     //Criação das funções
     FiguraEspacial::Area areaPtr = &FiguraEspacial::area;
@@ -212,8 +212,11 @@ int main() {
         cerr << "Erro: " << e.what() << endl;
     }
 
-    delete figura;
-    delete menu;
+    if (figura != nullptr) {
+        delete figura;
+    }
 
+    delete menu;
+    
     return 0;
 }
