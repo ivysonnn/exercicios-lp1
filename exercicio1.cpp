@@ -99,12 +99,14 @@ class Menu {
     public:
         int figureOption() {
             int option;
+            cout << "=========================" << endl;
             cout << "           MENU          " << endl;
             cout << "=========================" << endl;
             cout << "1) Cubo" << endl;
             cout << "2) Esfera" << endl;
             cout << "3) Piramide" << endl;
             cout << "4) Paralelepipedo" << endl;
+            cout << "0) Sair do programa" << endl;
             cout << "Digite a opção desejada: ";
             cin >> option;
 
@@ -188,6 +190,7 @@ int main() {
                     break;
                 default: break;
             }
+
         } while(opt != 0);
     } catch (invalid_argument& e) {
         cerr << "Erro: " << e.what() << endl;
